@@ -10,7 +10,7 @@
  route.get('/:activitieId', async (req, res, next)=>{
      const id = await req.params.activitieId
      if(id === 'caminata'){
-         res.status(200).json({
+         res.json({ //Does't has a status
              message: 'Caminata'
          })
      }
