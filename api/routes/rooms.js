@@ -9,7 +9,7 @@ router.get('/', (req, res, next)=>{
 
 router.get('/:roomId', async (req, res, next)=>{
     const id = await req.params.roomId;
-    if(id ==='individual'){
+    if(id ==='individual'){ //IT MOST CHANGE
         res.status(200).json({
             message: 'Cuarto inidividual'
         })
@@ -21,8 +21,16 @@ router.get('/:roomId', async (req, res, next)=>{
 })
 
 router.post('/', (req, res, next)=>{
+    const room = {
+        roomId: req.body.roomId,
+        name: req.body.name,
+        type: req.body.type,
+        rented: req.body.rented,
+        active: req.body.active
+    }
     res.status(200).json({
-        message: 'Metodo post'
+        message: 'Metodo post',
+        createdRoom: room 
     })
 })
 
