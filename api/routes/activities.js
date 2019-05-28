@@ -10,20 +10,20 @@ route.get('/', (req, res, next) => {
         .then(docs => {
             const response = {
                 count: docs.length,
-                product: docs.map(doc =>{
+                product: docs.map(map =>{
                     return{
-                        name: doc.name,
-                        price: doc.price,
-                        description: doc.description,
-                        date: doc.date,
+                        name: map.name,
+                        price: map.price,
+                        description: map.description,
+                        date: map.date,
                         request: {
-                            type: 'GET',
-                            url: 'http://localhost:3000/activities/' + doc._id
+                            type: 'GET_ALL_ACT',
+                            url: 'http://localhost:3000/activities/' + map._id
                         }
                     }
                 })
             }
-            docs.length >= 0 ? res.status(200).json(response) : res.status(404).json({message: 'No entries found'})
+            docs.length >= 1 ? res.status(200).json(response) : res.status(404).json({message: 'No entries found'})
         })
         .catch(err => {
             res.status(500).json({
@@ -39,9 +39,9 @@ route.get('/:activitieId', (req, res, next) => {
         .exec()
         .then(doc => {
             doc ? res.status(200).json({
-                product: doc,
+                activitie: doc,
                 request: {
-                    type: 'GET_ALL_ACT',
+                    type: 'GET_UNIQUE_ACT',
                     url: 'http://localhost:3000/activities/'
                 }
             }) 
@@ -122,7 +122,7 @@ route.delete('/:activitieId', (req, res, next) => {
                 message: 'Activitie deleted',
                 request: {
                     type: 'POST',
-                    url: 'https://localhost:3000/activities'
+                    url: 'http://localhost:3000/activities'
                 }
             })
         })
