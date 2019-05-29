@@ -1,16 +1,16 @@
 const express = require('express')
-const route = express.Router()
+const router = express.Router()
 const mongoose = require('mongoose')
 const objActivitie = require('../models/activities')
 
-route.get('/', (req, res, next) => {
+router.get('/', (req, res, next) => {
     objActivitie.find()
         .select("name price description date")
         .exec()
         .then(docs => {
             const response = {
                 count: docs.length,
-                product: docs.map(map =>{
+                activitie: docs.map(map =>{
                     return{
                         name: map.name,
                         price: map.price,
@@ -32,7 +32,7 @@ route.get('/', (req, res, next) => {
         })
 })
 
-route.get('/:activitieId', (req, res, next) => {
+router.get('/:activitieId', (req, res, next) => {
     const id = req.params.activitieId
     objActivitie.findById(id)
         .select("name price description date")
@@ -54,7 +54,7 @@ route.get('/:activitieId', (req, res, next) => {
         })
 })
 
-route.post('/', (req, res, next) => {
+router.post('/', (req, res, next) => {
     const activities = new objActivitie({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -88,7 +88,7 @@ route.post('/', (req, res, next) => {
         })
 })
 
-route.patch('/:activitieId', (req, res, next) => {
+router.patch('/:activitieId', (req, res, next) => {
     const id = req.params.activitieId
     const updateOps = {}
     for (const ops of req.body ) {
@@ -113,7 +113,7 @@ route.patch('/:activitieId', (req, res, next) => {
         })
 })
 
-route.delete('/:activitieId', (req, res, next) => {
+router.delete('/:activitieId', (req, res, next) => {
     const id = req.params.activitieId
     objActivitie.remove({_id: id})
         .exec()
@@ -121,7 +121,7 @@ route.delete('/:activitieId', (req, res, next) => {
             res.status(200).json({
                 message: 'Activitie deleted',
                 request: {
-                    type: 'POST',
+                    type: 'DELETE',
                     url: 'http://localhost:3000/activities'
                 }
             })
@@ -134,4 +134,4 @@ route.delete('/:activitieId', (req, res, next) => {
         })
 })
 
-module.exports = route
+module.exports = router

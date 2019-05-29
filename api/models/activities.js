@@ -5,7 +5,10 @@ const activitieSchema = mongoose.Schema({
     name: {type: String, required: true},
     price: {type: Number, required: true},
     description: {type: String, required: true},
-    date: Date
+    date: Date,
+    active: {type: Boolean, require: true, default: true}
 })
 
-module.exports = mongoose.model('Activities', activitieSchema)
+module.exports = mongoose.model('Activitie', activitieSchema)
+
+//active: {type: Boolean, default: true}
