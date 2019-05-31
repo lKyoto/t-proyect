@@ -1,15 +1,41 @@
 const express = require('express')
 const router = express.Router()
+const mongoose = require('mongoose')
+const objRoom = require('../models/rooms')
 
-router.get('/', (req, res, next)=>{
-    res.status(200).json({
-        message: 'metodo get!'
-    })
+router.get('/', (req, res, next) => {
+    objRoom.find()
+        .select("name price description individual active")
+        .exec()
+        .then(docs => {
+            const response = {
+                count: docs.length,
+                room: docs.map(map => {
+                    return {
+                        name: map.name,
+                        price: map.price,
+                        description: map.description,
+                        individual: map.individual,
+                        active: map.active,
+                        request: {
+                            type: 'GET_ALL_ROOMS',
+                            url: 'http://localhost:3000/rooms'
+                        }
+                    }
+                })
+            }
+            docs.length >= 1 ? res.status(200).json(response) : res.status(404).json({ message: 'Not entries found' })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        })
 })
 
-router.get('/:roomId', async (req, res, next)=>{
+router.get('/:roomId', async (req, res, next) => {
     const id = await req.params.roomId;
-    if(id ==='individual'){ //IT MOST CHANGE
+    if (id === 'individual') { //IT MOST CHANGE
         res.status(200).json({
             message: 'Cuarto inidividual'
         })
@@ -20,30 +46,52 @@ router.get('/:roomId', async (req, res, next)=>{
     }
 })
 
-router.post('/', (req, res, next)=>{
-    const room = {
-        roomId: req.body.roomId,
+router.post('/', (req, res, next) => {
+    const room = new objRoom({
+        _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        type: req.body.type,
-        rented: req.body.rented,
+        price: req.body.price,
+        description: req.body.description,
+        individual: req.body.individual,
         active: req.body.active
-    }
-    res.status(200).json({
-        message: 'Metodo post',
-        createdRoom: room 
     })
+    room
+        .save()
+        .then(result => {
+            res.status(201).json({
+                message: "Handling POST request to /rooms",
+                createdRoom: {
+                    name: result.name,
+                    price: result.price,
+                    description: result.description,
+                    individual: result.individual,
+                    active: result.active,
+                    request: {
+                        type: 'POST',
+                        url: 'http://localhost:3000/rooms/' + result._id
+                    }
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({
+                error: err
+            })
+        })
 })
 
-router.patch('/:roomId', (req, res, next)=>{
-    res.status(200).json({
-        message: 'metodo patch'
+/*
+    router.patch('/:roomId', (req, res, next) => {
+        res.status(200).json({
+            message: 'metodo patch'
+        })
     })
-})
-
-router.delete('/:roomId', (req, res, next)=>{
-    res.status(200).json({
-        message: 'Delete'
+ 
+    router.delete('/:roomId', (req, res, next) => {
+        res.status(200).json({
+            message: 'Delete'
+        })
     })
-})
-
+*/
 module.exports = router
