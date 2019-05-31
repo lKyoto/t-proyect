@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
                         date: map.date,
                         request: {
                             type: 'GET_ALL_ACT',
-                            url: 'http://localhost:3000/activities/' + map._id
+                            url: `http://localhost:3000/activities/${map._id}`
                         }
                     }
                 })
@@ -42,7 +42,7 @@ router.get('/:activitieId', (req, res, next) => {
                 activitie: doc,
                 request: {
                     type: 'GET_UNIQUE_ACT',
-                    url: 'http://localhost:3000/activities/'
+                    url: `http://localhost:3000/activities/${doc._id}`
                 }
             }) 
             : res.status(404).json({

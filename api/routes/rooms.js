@@ -19,7 +19,7 @@ router.get('/', (req, res, next) => {
                         active: map.active,
                         request: {
                             type: 'GET_ALL_ROOMS',
-                            url: 'http://localhost:3000/rooms'
+                            url: 'http://localhost:3000/rooms/' + map._id
                         }
                     }
                 })
@@ -31,19 +31,6 @@ router.get('/', (req, res, next) => {
                 error: err
             })
         })
-})
-
-router.get('/:roomId', async (req, res, next) => {
-    const id = await req.params.roomId;
-    if (id === 'individual') { //IT MOST CHANGE
-        res.status(200).json({
-            message: 'Cuarto inidividual'
-        })
-    } else {
-        res.status(200).json({
-            message: 'Id no encontrado'
-        })
-    }
 })
 
 router.post('/', (req, res, next) => {
@@ -68,7 +55,7 @@ router.post('/', (req, res, next) => {
                     active: result.active,
                     request: {
                         type: 'POST',
-                        url: 'http://localhost:3000/rooms/' + result._id
+                        url: `http://localhost:3000/rooms/${result._id}`
                     }
                 }
             })
@@ -81,17 +68,41 @@ router.post('/', (req, res, next) => {
         })
 })
 
+router.get('/:roomId', (req, res, next) => {
+    const id = req.params.roomId
+    objRoom.findById(id)
+        .select("name price description individual active")
+        .exec()
+        .then(doc => {
+            doc ? res.status(200).json({
+                room: doc,
+                request: {
+                    type: 'GET_ID',
+                    url: `http://localhost:3000/rooms/${doc._id}` 
+                }
+            })
+                : res.status(404).json({
+                    message: 'No valid entry found for provided ID'
+                })
+        })
+        .catch(err => {
+            res.status(500).json({ error: err })
+        })
+})
+
 /*
     router.patch('/:roomId', (req, res, next) => {
         res.status(200).json({
             message: 'metodo patch'
         })
     })
- 
+
+
     router.delete('/:roomId', (req, res, next) => {
         res.status(200).json({
             message: 'Delete'
         })
     })
 */
+
 module.exports = router
