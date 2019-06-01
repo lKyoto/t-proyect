@@ -10,8 +10,8 @@ router.get('/', (req, res, next) => {
         .then(docs => {
             const response = {
                 count: docs.length,
-                activitie: docs.map(map =>{
-                    return{
+                activitie: docs.map(map => {
+                    return {
                         name: map.name,
                         price: map.price,
                         description: map.description,
@@ -23,7 +23,7 @@ router.get('/', (req, res, next) => {
                     }
                 })
             }
-            docs.length >= 1 ? res.status(200).json(response) : res.status(404).json({message: 'No entries found'})
+            docs.length >= 1 ? res.status(200).json(response) : res.status(404).json({ message: 'No entries found' })
         })
         .catch(err => {
             res.status(500).json({
@@ -44,13 +44,11 @@ router.get('/:activitieId', (req, res, next) => {
                     type: 'GET_UNIQUE_ACT',
                     url: `http://localhost:3000/activities/${doc._id}`
                 }
-            }) 
-            : res.status(404).json({
-                message: 'No valid entry found for provided ID'
             })
+                : res.status(404).json({ message: 'No valid entry found for provided ID' })
         })
         .catch(err => {
-            res.status(500).json({error: err})
+            res.status(500).json({ error: err })
         })
 })
 
@@ -91,21 +89,21 @@ router.post('/', (req, res, next) => {
 router.patch('/:activitieId', (req, res, next) => {
     const id = req.params.activitieId
     const updateOps = {}
-    for (const ops of req.body ) {
+    for (const ops of req.body) {
         updateOps[ops.propName] = ops.value
     }
-    objActivitie.update({_id: id}, {$set: updateOps })
+    objActivitie.update({ _id: id }, { $set: updateOps })
         .exec()
-        .then(result =>{
+        .then(result => {
             res.status(200).json({
                 message: 'Activitie updated',
-                request:{
+                request: {
                     type: 'GET',
                     url: `http://localhost:3000/activities/${id}`
                 }
             })
         })
-        .catch(err =>{
+        .catch(err => {
             console.log(err)
             res.status(500).json({
                 error: err
@@ -115,7 +113,7 @@ router.patch('/:activitieId', (req, res, next) => {
 
 router.delete('/:activitieId', (req, res, next) => {
     const id = req.params.activitieId
-    objActivitie.remove({_id: id})
+    objActivitie.remove({ _id: id })
         .exec()
         .then(result => {
             res.status(200).json({
@@ -126,7 +124,7 @@ router.delete('/:activitieId', (req, res, next) => {
                 }
             })
         })
-        .catch(err =>{
+        .catch(err => {
             console.log(err)
             res.status(500).json({
                 error: err

@@ -33,6 +33,28 @@ router.get('/', (req, res, next) => {
         })
 })
 
+router.get('/:roomId', (req, res, next) => {
+    const id = req.params.roomId
+    objRoom.findById(id)
+        .select("name price description individual active")
+        .exec()
+        .then(doc => {
+            doc ? res.status(200).json({
+                room: doc,
+                request: {
+                    type: 'GET_ID',
+                    url: `http://localhost:3000/rooms/${doc._id}`
+                }
+            })
+                : res.status(404).json({
+                    message: 'No valid entry found for provided ID'
+                })
+        })
+        .catch(err => {
+            res.status(500).json({ error: err })
+        })
+})
+
 router.post('/', (req, res, next) => {
     const room = new objRoom({
         _id: new mongoose.Types.ObjectId(),
@@ -68,28 +90,6 @@ router.post('/', (req, res, next) => {
         })
 })
 
-router.get('/:roomId', (req, res, next) => {
-    const id = req.params.roomId
-    objRoom.findById(id)
-        .select("name price description individual active")
-        .exec()
-        .then(doc => {
-            doc ? res.status(200).json({
-                room: doc,
-                request: {
-                    type: 'GET_ID',
-                    url: `http://localhost:3000/rooms/${doc._id}`
-                }
-            })
-                : res.status(404).json({
-                    message: 'No valid entry found for provided ID'
-                })
-        })
-        .catch(err => {
-            res.status(500).json({ error: err })
-        })
-})
-
 router.patch('/:roomId', (req, res, next) => {
     const id = req.params.roomId
     const updateOps = {}
@@ -103,15 +103,13 @@ router.patch('/:roomId', (req, res, next) => {
                 message: 'Room updated',
                 request: {
                     type: 'UPDATE',
-                    url: `http://localhost:3000/rooms${id}`
+                    url: `http://localhost:3000/rooms/${id}`
                 }
             })
         })
         .catch(err => {
             console.log(err)
-            res.status(500).json({
-                error: err
-            })
+            res.status(500).json({error: err})
         })
 })
 
@@ -121,7 +119,7 @@ router.delete('/:roomId', (req, res, next) => {
         .exec()
         .then(result => {
             res.status(200).json({
-                message: 'Rooms deleted',
+                message: 'Room deleted',
                 request: {
                     type: 'DELETE',
                     url: 'http://localhost:3000/rooms'
