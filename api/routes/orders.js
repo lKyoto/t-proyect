@@ -3,9 +3,11 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const objOrder = require('../models/orders')
 
-router.get('/', (req, res, next) => {
+router.get('/',(req, res, next) => {
     objOrder.find()
         .select("totalPrice date _id activitie room")
+        .populate('activitie')
+        .populate('room')
         .exec()
         .then(docs => {
             const response = {
