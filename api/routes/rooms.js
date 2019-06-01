@@ -78,7 +78,7 @@ router.get('/:roomId', (req, res, next) => {
                 room: doc,
                 request: {
                     type: 'GET_ID',
-                    url: `http://localhost:3000/rooms/${doc._id}` 
+                    url: `http://localhost:3000/rooms/${doc._id}`
                 }
             })
                 : res.status(404).json({
@@ -90,19 +90,49 @@ router.get('/:roomId', (req, res, next) => {
         })
 })
 
-/*
-    router.patch('/:roomId', (req, res, next) => {
-        res.status(200).json({
-            message: 'metodo patch'
+router.patch('/:roomId', (req, res, next) => {
+    const id = req.params.roomId
+    const updateOps = {}
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value
+    }
+    objRoom.update({ _id: id }, { $set: updateOps })
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Room updated',
+                request: {
+                    type: 'UPDATE',
+                    url: `http://localhost:3000/rooms${id}`
+                }
+            })
         })
-    })
-
-
-    router.delete('/:roomId', (req, res, next) => {
-        res.status(200).json({
-            message: 'Delete'
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({
+                error: err
+            })
         })
-    })
-*/
+})
 
+router.delete('/:roomId', (req, res, next) => {
+    const id = req.params.roomId
+    objRoom.remove({ _id: id })
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Rooms deleted',
+                request: {
+                    type: 'DELETE',
+                    url: 'http://localhost:3000/rooms'
+                }
+            })
+        })
+        .catch(err =>{
+            console.log(err)
+            res.status(200).json({
+                error: err
+            })
+        })
+})
 module.exports = router

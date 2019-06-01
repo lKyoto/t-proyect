@@ -9,5 +9,5 @@ const roomSchema = mongoose.Schema({
     active: {type: Boolean, default: true}
 })
 
-module.exports = mongoose.model('room', roomSchema)
+module.exports = mongoose.model('Room', roomSchema)
 

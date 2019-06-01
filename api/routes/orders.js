@@ -6,15 +6,16 @@ const objOrder = require('../models/orders')
 router.get('/', (req, res, next) => {
     
     objOrder.find()
-        .select("totalPrice date _id activitie")
+        .select("totalPrice date _id activitie room")
         .exec()
         .then(docs => {
             const response = {
                 count: docs.length,
                 order: docs.map(map => {
                     return {
-                        OrderID: map._id,
+                        orderID: map._id,
                         activitieID: map.activitie,
+                        roomID: map.room,
                         totalPrice: map.totalPrice,
                         date: map.date,
                         request: {
@@ -38,7 +39,8 @@ router.post('/', (req, res, next) => {
         _id: mongoose.Types.ObjectId(),
         totalPrice: req.body.totalPrice,
         date: req.body.date,
-        activitie: req.body.activitieId
+        activitie: req.body.activitieID,
+        room: req.body.roomID
     })
     order
         .save()
