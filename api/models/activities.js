@@ -5,7 +5,7 @@ const activitieSchema = mongoose.Schema({
     name: {type: String, required: true},
     price: {type: Number, required: true},
     description: {type: String, required: true},
-    //date: Date,
+    date: { type: Date, default: Date.now, required: true},
     active: {type: Boolean, require: true, default: true}
 })
 

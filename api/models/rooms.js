@@ -6,6 +6,7 @@ const roomSchema = mongoose.Schema({
     price: {type: Number, required: true},
     description: String,
     individual: {type: Boolean, default: true},
+    date: { type: Date, default: Date.now },
     active: {type: Boolean, default: true}
 })
 
