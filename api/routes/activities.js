@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 const objActivitie = require('../models/activities')
+const checkAuth = require('../middleware/check-auth')
 
 router.get('/', (req, res, next) => {
     objActivitie.find()
@@ -32,7 +33,7 @@ router.get('/', (req, res, next) => {
         })
 })
 
-router.get('/:activitieId', (req, res, next) => {
+router.get('/:activitieId', checkAuth, (req, res, next) => {
     const id = req.params.activitieId
     objActivitie.findById(id)
         .select("name price description date")
