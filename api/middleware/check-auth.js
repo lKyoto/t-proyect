@@ -1,7 +1,9 @@
 /*important
     to add tokens please write the word 'checkAuth' in the method that you wanna checking
     For example
-    router.get('/:activitieId', checkAuth, (req, res, next) => { ... 
+        router.get('/', checkAuth, activitieController.activities_get_all) 
+        OR with params 
+        router.get('/:activitieId', checkAuth, activitieController.activities_get_all)
 */
 const jwt = require('jsonwebtoken')
 module.exports = (req, res, next)=>{
