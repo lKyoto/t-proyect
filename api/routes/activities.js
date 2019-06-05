@@ -4,7 +4,7 @@ const checkAuth = require('../middleware/check-auth')
 
 const activitieController = require('../controllers/activities')
 
-router.get('/', checkAuth, activitieController.activities_get_all)
+router.get('/', activitieController.activities_get_all)
 
 router.get('/:activitieId', activitieController.activitie_by_id)
 
