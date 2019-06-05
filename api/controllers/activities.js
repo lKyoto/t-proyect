@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const objActivitie = require('../models/activities')
-
 exports.activities_get_all = (req, res, next) => {
     objActivitie.find()
         .select("name price description date")
