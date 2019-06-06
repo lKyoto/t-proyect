@@ -14,4 +14,4 @@ const orderSchema = mongoose.Schema({
     //active: {type: Boolean, required: true}
 })
 
-module.exports = mongoose.model('Order', orderSchema)
+module.exports = mongoose.model('Order', orderSchema) 
