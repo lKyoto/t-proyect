@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const objActivitie = require('../models/activities')
+
 exports.activities_get_all = (req, res, next) => {
     objActivitie.find()
         .select("name price description date")
@@ -83,7 +84,7 @@ exports.activitie_post = (req, res, next) => {
         })
 }
 
-exports.activitie_patch = (req, res, next) => {
+exports.activitie_patch_id = (req, res, next) => {
     const id = req.params.activitieId
     const updateOps = {}
     for (const ops of req.body) {
@@ -108,7 +109,7 @@ exports.activitie_patch = (req, res, next) => {
         })
 }
 
-exports.activitie_delete =  (req, res, next) => {
+exports.activitie_delete_id =  (req, res, next) => {
     const id = req.params.activitieId
     objActivitie.remove({ _id: id })
         .exec()
