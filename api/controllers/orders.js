@@ -13,8 +13,8 @@ exports.orders_get_all = (req, res, next) => {
                 order: docs.map(map => {
                     return {
                         orderID: map._id,
-                        activitieID: map.activitie,
-                        roomID: map.room,
+                        activitie: map.activitie,
+                        room: map.room,
                         totalPrice: map.totalPrice,
                         date: map.date,
                         request: {
@@ -36,7 +36,8 @@ exports.orders_get_all = (req, res, next) => {
 exports.order_by_id = (req, res, next) => {
     const id = req.params.orderID
     objOrder.findById(id)
-        .select("totalPrice date _id activitie room")
+        .select("totalPrice date _id activitie")
+        .populate('activitie')
         .exec()
         .then(doc => {
             doc ? res.status(200).json({

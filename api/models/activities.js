@@ -5,7 +5,7 @@ const activitieSchema = mongoose.Schema({
         type: String, 
         required: true,
         minlength: [5,"El nombre de la actividad debe ser más grande"],
-        maxlength: [20,"El nombre de la actividad debe ser más corto"]
+        maxlength: [30,"El nombre de la actividad debe ser más corto"]
     },
     price: {
         type: Number,
@@ -27,4 +27,4 @@ const activitieSchema = mongoose.Schema({
         default: true
     }
 })
-module.exports = mongoose.model('Activitie', activitieSchema)
+module.exports = mongoose.model('activitie', activitieSchema)

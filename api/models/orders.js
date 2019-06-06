@@ -9,16 +9,8 @@ const orderSchema = mongoose.Schema({
         type: Date, 
         default: Date.now 
     },
-    activitie: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Activitie', 
-        required: false
-    },
-    room: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Room',
-        required: false
-    }
+    activitie: {type: mongoose.Schema.Types.ObjectId, ref: 'activitie', required: true},
+    room: {type: mongoose.Schema.Types.ObjectId, ref: 'room',required: true}
     //active: {type: Boolean, required: true}
 })
 
