@@ -7,9 +7,10 @@ exports.rooms_get_all = (req, res, next) => {
         .exec()
         .then(docs => {
             const response = {
-                count: docs.length,
+                //count: docs.length,
                 room: docs.map(map => {
                     return {
+                        id: map._id,
                         name: map.name,
                         price: map.price,
                         description: map.description,
