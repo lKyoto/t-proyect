@@ -9,7 +9,7 @@ router.get('/:roomId', roomController.room_by_id)
 
 router.post('/', roomController.room_post)
 
-router.patch('/:roomId', roomController.room_patch_id)
+router.put('/:roomId', roomController.room_patch_id)
 
 router.delete('/:roomId',roomController.room_delete_id)
 

@@ -1,13 +1,18 @@
 const mongoose = require('mongoose')
 const objRoom = require('../models/rooms')
 
-exports.rooms_get_all = (req, res, next) => {
+exports.rooms_get_all = async (req, res, next) => {
+
+    const room = await objRoom.find()
+    console.log(room )
+    res.json(room)
+    /*
     objRoom.find()
         .select("name price description individual active")
         .exec()
         .then(docs => {
             const response = {
-                //count: docs.length,
+                count: docs.length,
                 room: docs.map(map => {
                     return {
                         id: map._id,
@@ -30,7 +35,10 @@ exports.rooms_get_all = (req, res, next) => {
                 error: err
             })
         })
-}
+        
+        */
+    }
+
 
 exports.room_by_id = (req, res, next) => {
     const id = req.params.roomId
@@ -52,9 +60,24 @@ exports.room_by_id = (req, res, next) => {
         .catch(err => {
             res.status(500).json({ error: err })
         })
+        
 }
 
-exports.room_post = (req, res, next) => {
+
+exports.room_post = async (req, res, next) => {
+    const room = new objRoom({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name,
+        price: req.body.price,
+        description: req.body.description,
+        individual: req.body.individual,
+        active: req.body.active
+    });
+    await room.save()
+    console.log(room)
+    res.json({status: 'OK'})
+       
+    /* 
     const room = new objRoom({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -87,9 +110,13 @@ exports.room_post = (req, res, next) => {
                 error: err
             })
         })
+        */
 }
 
-exports.room_patch_id = (req, res, next) => {
+exports.room_patch_id = async (req, res, next) => {
+    await objRoom.findByIdAndUpdate(req.params.roomId, req.body)
+    res.json({status: 'OK UPDATE'})
+    /*
     const id = req.params.roomId
     const updateOps = {}
     for (const ops of req.body) {
@@ -110,8 +137,9 @@ exports.room_patch_id = (req, res, next) => {
             console.log(err)
             res.status(500).json({error: err})
         })
+        */
 }
-
+/*
 exports.room_delete_id =  (req, res, next) => {
     const id = req.params.roomId
     objRoom.remove({ _id: id })
@@ -131,4 +159,9 @@ exports.room_delete_id =  (req, res, next) => {
                 error: err
             })
         })
+}
+*/
+exports.room_delete_id = async (req, res, next) => {
+    await objRoom.findByIdAndRemove(req.params.roomId)
+    res.json({status: 'OK DELETE'})
 }
