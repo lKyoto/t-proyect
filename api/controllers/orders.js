@@ -1,6 +1,18 @@
 const mongoose = require('mongoose')
 const objOrder = require('../models/orders')
 
+
+exports.orders_get_all = async (req, res, next) => {
+    const activitie = await objOrder.find()
+        .limit(10) //El limit debe ir en dashboard
+        .sort({date: -1})
+        .select("totalPrice date _id activitie room")
+        .populate('activitie')
+        .populate('room') 
+    res.json(activitie)
+}
+
+/* 
 exports.orders_get_all = (req, res, next) => {
     objOrder.find()
         .select("totalPrice date _id activitie room")
@@ -31,7 +43,9 @@ exports.orders_get_all = (req, res, next) => {
                 error: err
             })
         })
+
 }
+*/
 
 exports.order_by_id = (req, res, next) => {
     const id = req.params.orderID

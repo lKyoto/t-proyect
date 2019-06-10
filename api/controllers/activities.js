@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 const objActivitie = require('../models/activities')
 
 exports.activities_get_all = async (req, res, next) => {
-    const activitie = await objActivitie.find().limit(8).sort({date: -1})
+    const activitie = await objActivitie.find().limit(8).sort({date: -1}) //El limit debe ir en dashboard
+    console.log('consulta con 8 documentos')
     res.json(activitie)
 }
 
