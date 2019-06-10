@@ -1,33 +1,9 @@
 const mongoose = require('mongoose')
 const objActivitie = require('../models/activities')
 
-exports.activities_get_all = (req, res, next) => {
-    objActivitie.find()
-        .select("name price description date")
-        .exec()
-        .then(docs => {
-            const response = {
-                count: docs.length,
-                activitie: docs.map(map => {
-                    return {
-                        name: map.name,
-                        price: map.price,
-                        description: map.description,
-                        date: map.date,
-                        request: {
-                            type: 'GET_ALL_ACT',
-                            url: `http://localhost:3000/activities/${map._id}`
-                        }
-                    }
-                })
-            }
-            docs.length >= 1 ? res.status(200).json(response) : res.status(404).json({ message: 'No entries found' })
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            })
-        })
+exports.activities_get_all = async (req, res, next) => {
+    const activitie = await objActivitie.find().limit(8).sort({date: -1})
+    res.json(activitie)
 }
 
 exports.activitie_by_id =  (req, res, next) => {

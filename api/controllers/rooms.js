@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 const objRoom = require('../models/rooms')
 
+
 exports.rooms_get_all = async (req, res, next) => {
 
     const room = await objRoom.find()
-    console.log(room )
     res.json(room)
     /*
     objRoom.find()
@@ -73,9 +73,26 @@ exports.room_post = async (req, res, next) => {
         individual: req.body.individual,
         active: req.body.active
     });
+    const {name, price, description} = req.body
+    const errors =  []
+    if(!name){
+        errors.push({text: 'Por favor escriba el número de la habitación'})
+    }
+    if(!description){
+        errors.push({text: 'Por favor escriba una descripción para la habitación'})
+    }
+    if(!price){
+        errors.push({text: 'Por favor escriba el precio de la habitación'})
+    }
+    if(errors.length > 0) {
+        
+        
+    } else {
+        res.json({status: 'OK'})
+    }
     await room.save()
     console.log(room)
-    res.json({status: 'OK'})
+    console.log(errors)
        
     /* 
     const room = new objRoom({
