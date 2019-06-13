@@ -8,7 +8,7 @@ router.get('/', activitieController.activities_get_all)
 
 router.get('/:activitieId', activitieController.activitie_by_id)
 
-router.post('/', checkAuth ,activitieController.activitie_post)
+router.post('/', activitieController.activitie_post)
 
 router.patch('/:activitieId', checkAuth, activitieController.activitie_patch_id)
 
