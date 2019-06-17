@@ -7,24 +7,27 @@ exports.activities_get_all = async (req, res, next) => {
     res.json(activitie)
 }
 
-exports.activitie_by_id =  (req, res, next) => {
+exports.activitie_by_id = async (req, res, next) => {
+    // const id = req.params.activitieId
+    // objActivitie.findById(id)
+    //     .select("name price description date")
+    //     .exec()
+    //     .then(doc => {
+    //         doc ? res.status(200).json({
+    //             activitie: doc,
+    //             request: {
+    //                 type: 'GET_UNIQUE_ACT',
+    //                 url: `http://localhost:3000/activities/${doc._id}`
+    //             }
+    //         })
+    //             : res.status(404).json({ message: 'No valid entry found for provided ID' })
+    //     })
+    //     .catch(err => {
+    //         res.status(500).json({ error: err })
+    //     })
     const id = req.params.activitieId
-    objActivitie.findById(id)
-        .select("name price description date")
-        .exec()
-        .then(doc => {
-            doc ? res.status(200).json({
-                activitie: doc,
-                request: {
-                    type: 'GET_UNIQUE_ACT',
-                    url: `http://localhost:3000/activities/${doc._id}`
-                }
-            })
-                : res.status(404).json({ message: 'No valid entry found for provided ID' })
-        })
-        .catch(err => {
-            res.status(500).json({ error: err })
-        })
+    const activitie = await objActivitie.findById(id)
+    res.json(activitie)
 }
 
 exports.activitie_post = (req, res, next) => {
@@ -61,29 +64,32 @@ exports.activitie_post = (req, res, next) => {
         })
 }
 
-exports.activitie_patch_id = (req, res, next) => {
+exports.activitie_patch_id = async (req, res, next) => {
+    // const id = req.params.activitieId
+    // const updateOps = {}
+    // for (const ops of req.body) {
+    //     updateOps[ops.propName] = ops.value
+    // }
+    // objActivitie.update({ _id: id }, { $set: updateOps })
+    //     .exec()
+    //     .then(result => {
+    //         res.status(200).json({
+    //             message: 'Activitie updated',
+    //             request: {
+    //                 type: 'GET',
+    //                 url: `http://localhost:3000/activities/${id}`
+    //             }
+    //         })
+    //     })
+    //     .catch(err => {
+    //         console.log(err)
+    //         res.status(500).json({
+    //             error: err
+    //         })
+    //     })
     const id = req.params.activitieId
-    const updateOps = {}
-    for (const ops of req.body) {
-        updateOps[ops.propName] = ops.value
-    }
-    objActivitie.update({ _id: id }, { $set: updateOps })
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'Activitie updated',
-                request: {
-                    type: 'GET',
-                    url: `http://localhost:3000/activities/${id}`
-                }
-            })
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({
-                error: err
-            })
-        })
+    const activitie = await objActivitie.findByIdAndUpdate(id , req.body)
+    res.json({status: 'ok'})
 }
 
 exports.activitie_delete_id =  (req, res, next) => {

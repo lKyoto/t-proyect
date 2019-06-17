@@ -10,8 +10,8 @@ router.get('/:activitieId', activitieController.activitie_by_id)
 
 router.post('/', activitieController.activitie_post)
 
-router.patch('/:activitieId', checkAuth, activitieController.activitie_patch_id)
+router.put('/:activitieId', activitieController.activitie_patch_id)
 
-router.delete('/:activitieId',checkAuth, activitieController.activitie_delete_id)
+router.delete('/:activitieId', activitieController.activitie_delete_id)
 
 module.exports = router
