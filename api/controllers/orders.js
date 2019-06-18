@@ -48,24 +48,12 @@ exports.orders_get_all = (req, res, next) => {
 */
 
 exports.order_by_id = (req, res, next) => {
-    const id = req.params.orderID
+    const id = req.params.orderId
     objOrder.findById(id)
-        .select("totalPrice date _id activitie")
+        .select("totalPrice date _id")
         .populate('activitie')
-        .exec()
-        .then(doc => {
-            doc ? res.status(200).json({
-                order: doc,
-                request: {
-                    type: 'GET_ORDER_BY_ID',
-                    url: `http://localhost:3000/order/${doc._id}`
-                }
-            })
-                : res.status(404).json({ message: 'No valid entry found for provided ID' })
-        })
-        .catch(err => {
-            res.status(500).json({ error: err })
-        })
+        .populate('room')
+    res.json(activitie)
 }
 
 exports.order_post = (req, res, next) => {
@@ -89,7 +77,7 @@ exports.order_post = (req, res, next) => {
             })
         })
 }
-
+/* 
 exports.order_patch_id = (req, res, next)=>{
     const id = req.params.orderID
     const updateOps = {}
@@ -112,22 +100,15 @@ exports.order_patch_id = (req, res, next)=>{
         })
 
 }
+*/
 
+exports.order_patch_id = async (req, res, next) =>{
+    const id = req.params.orderId
+    await objOrder.findByIdAndUpdate(id, res.body)
+    res.json({status: "OK UPDATE"})
+}
 
- exports.order_delete_id = (req, res, next)=>{
-    const id = req.params.orderID
-    objOrder.remove({_id: id})
-        .exec()
-        .then(result =>{
-            res.status(200).json({
-                message: 'Order deleted',
-                request: {
-                    type: 'DELETE',
-                    url: 'http://localhost:3000/orders'
-                }
-            })
-        })
-        .catch(err =>{
-            res.status(500).json({error: err})
-        })
+ exports.order_delete_id = async (req, res, next)=>{
+    await objOrder.findByIdAndRemove(req.params.orderId)
+    res.json({status:"OK DELETE"})
 }
