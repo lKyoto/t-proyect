@@ -3,6 +3,73 @@ const objUser = require('../models/users')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
+process.env.SECRET_KEY = 'secret'
+
+exports.register = (req, res, next) => {
+    const today = new Date()
+    const userData = {
+        _id: new mongoose.Types.ObjectId(),
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email,
+        password: req.body.password,
+        created: today
+    }
+    objUser.findOne({
+        email: req.body.email
+    })
+    .then(user => {
+        if(!user){
+            bcrypt.hash(req.body.password, 10 , (err, hash)=> {
+                userData.password = hash
+                objUser.create(userData)
+                .then(user => {
+                    res.json({status: user.email + ' registered'})
+                })
+                .catch(err => {
+                    res.send('error: '+ err)
+                })
+            })
+        } else {
+            res.json({error: 'User already exists'})
+        }
+    })
+    .catch(err => {
+        res.send('error: '+ err) 
+    })
+}
+
+exports.login = (req, res, next) => {
+    objUser.findOne({
+        email: req.body.email
+    })
+    .then(user => {
+        if(user){
+            if(bcrypt.compareSync(req.body.password, user.password)){
+                const payload = {
+                    _id: user._id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email
+                }
+                let token = jwt.sign(payload, process.env.SECRET_KEY, {
+                    expiresIn: 1440
+                })
+                res.send(token)
+            }else {
+                res.json({error: 'User does not exists'})
+            }
+        }else {
+            res.json({error: 'User does not exists'})
+        }
+    })
+    .catch(err =>{
+        res.send('error: '+ err)
+    })
+}
+
+
+/*
 exports.signup =  (req, res, next) => {
     objUser.find({ email: req.body.email })
         .exec()
@@ -73,3 +140,4 @@ exports.user_delete_id = (req, res, next) => {
             res.status(500).json({ error: err })
         })
 }
+*/
