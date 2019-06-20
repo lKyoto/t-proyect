@@ -3,8 +3,9 @@ const objUser = require('../models/users')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
-process.env.SECRET_KEY = 'secret'
 
+//process.env.SECRET_KEY = 'secret'
+/*
 exports.register = (req, res, next) => {
     const today = new Date()
     const userData = {
@@ -67,10 +68,10 @@ exports.login = (req, res, next) => {
         res.send('error: '+ err)
     })
 }
+*/
 
 
-/*
-exports.signup =  (req, res, next) => {
+exports.signup = (req, res, next) => {
     objUser.find({ email: req.body.email })
         .exec()
         .then(user => {
@@ -83,7 +84,10 @@ exports.signup =  (req, res, next) => {
                     } else {
                         const user = new objUser({
                             _id: new mongoose.Types.ObjectId(),
+                            first_name: req.body.first_name,
+                            last_name: req.body.last_name,
                             email: req.body.email,
+                            date: req.body.date,
                             password: hash
                         })
                         user
@@ -109,25 +113,32 @@ exports.login = (req, res, next) => {
         .exec()
         .then(user => {
             if (user.length < 1) {
-                res.status(401).json({ message: 'Auth faild' })
+                res.status(401).json({ message: 'Auth faild 1' })
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-                if (err) res.status(401).json({ message: 'Auth faild' })
+                if (err) res.status(401).json({ message: 'Auth faild 2' })
                 if (result) {
                     const token = jwt.sign({
                         email: user[0].email,
                         userID: user[0]._id
-                    }, process.env.JWT_KEY, {expiresIn: "1h"})
+                    },
+                    "8980sdfsd23sd35667fslqm29", //IMPORTANTE: ENCRIPTAR ESTA MIERDA! POR AHORA YOLO 
+                    { expiresIn: "1h" }) 
                     return res.status(200).json({
                         message: 'Auth successful',
-                        Token: token
+                        token: token
                     })
-                } else { 
-                    res.status(401).json({ message: 'Auth faild' })
+                } else {
+                    res.status(401).json({ message: 'Auth faild 3' })
                 }
             })
         })
-        .catch()
+        .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
 }
 
 exports.user_delete_id = (req, res, next) => {
@@ -140,4 +151,3 @@ exports.user_delete_id = (req, res, next) => {
             res.status(500).json({ error: err })
         })
 }
-*/

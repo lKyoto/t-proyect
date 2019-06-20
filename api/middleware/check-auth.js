@@ -14,6 +14,6 @@ module.exports = (req, res, next)=>{
         req.userData = verify
         next()
     } catch (error) {
-        return res.status(404).json({messaje: 'Auth failed'})
+        return res.status(404).json({messaje: 'Auth failed 7'})
     }
 }

@@ -16,6 +16,7 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
+mongoose.Promise = global.Promise
 // CONNECTION WITH ATLAS
 
 // mongoose.connect('mongodb+srv://Chris:'+process.env.MONGO_ATLAS_PW+'@hotel-vxquv.mongodb.net/test?retryWrites=true',{
@@ -26,7 +27,6 @@ app.use(bodyParser.json())
 
 //LOCAL CONNECTION 
 
-mongoose.Promise = global.Promise
 mongoose.connect('mongodb://localhost:27017/hoteldb', {
     useNewUrlParser: true,
     useFindAndModify: false,
