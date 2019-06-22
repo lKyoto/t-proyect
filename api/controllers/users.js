@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
 
-//process.env.SECRET_KEY = 'secret'
+
+process.env.SECRET_KEY = 'secret'
 /*
 exports.register = (req, res, next) => {
     const today = new Date()
@@ -70,7 +71,6 @@ exports.login = (req, res, next) => {
 }
 */
 
-
 exports.signup = (req, res, next) => {
     objUser.find({ email: req.body.email })
         .exec()
@@ -94,7 +94,9 @@ exports.signup = (req, res, next) => {
                             .save()
                             .then(result => {
                                 console.log(result)
-                                res.status(201).json({ message: 'User created' })
+                                res.status(201).json({ 
+                                    Auth: true,
+                                    message: 'User created' })
                             })
                             .catch(err => {
                                 console.log(err)
@@ -122,11 +124,13 @@ exports.login = (req, res, next) => {
                         email: user[0].email,
                         userID: user[0]._id
                     },
-                    "8980sdfsd23sd35667fslqm29", //IMPORTANTE: ENCRIPTAR ESTA MIERDA! POR AHORA YOLO 
+                    process.env.SECRET_KEY = 'secret', //IMPORTANTE: ENCRIPTAR ESTA MIERDA! POR AHORA YOLO 
                     { expiresIn: "1h" }) 
                     return res.status(200).json({
+                        Auth: true,
+                        result: result,
+                        token: token,
                         message: 'Auth successful',
-                        token: token
                     })
                 } else {
                     res.status(401).json({ message: 'Auth faild 3' })
